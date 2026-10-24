@@ -44,6 +44,31 @@ cd ~/Documents/PSAMediaEmulator
    Після цього перезапускає WirePlumber.
 4. Ставить і вмикає user-службу `smeg-bt-agent.service`, яка стартує разом із сесією.
 
+## Python-середовище (PyCharm / `.venv`)
+
+PyQt6 і pydbus ставляться системними пакетами (`apt`): `pydbus` потребує `gi` (PyGObject),
+який через `pip` у venv треба компілювати. Тому venv має бачити системні пакети.
+
+Якщо PyCharm створив `.venv` і видає `ModuleNotFoundError: No module named 'PyQt6'`:
+
+```bash
+sed -i 's/^include-system-site-packages = false/include-system-site-packages = true/' .venv/pyvenv.cfg
+```
+
+Або створіть venv одразу правильно:
+
+```bash
+python3 -m venv --system-site-packages .venv
+```
+
+Перевірка:
+
+```bash
+.venv/bin/python -c "from PyQt6.QtWidgets import QApplication; import pydbus, gi; print('ok')"
+```
+
+Після цього в PyCharm: File → Invalidate Caches / Restart, щоб зникли червоні підкреслення.
+
 ## Щоденне використання
 
 1. Вставте свисток у USB. Агент сам увімкне й налаштує адаптер.
